@@ -2,7 +2,7 @@ name: "Keyhound Secret Scanner"
 author: "Felipe Convento"
 
 branding:
-  icon: "key"
+  icon: "search"
   color: "red"
 
 inputs:
