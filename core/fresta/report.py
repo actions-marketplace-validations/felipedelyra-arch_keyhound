@@ -31,8 +31,8 @@ def print_table(findings: list[Finding], root: Path, console: Console) -> None:
     table = Table(header_style="bold")
     table.add_column("Sev.", no_wrap=True)
     table.add_column("Rule", no_wrap=True)
-    table.add_column("File:line", overflow="fold")
-    table.add_column("Value", no_wrap=True)
+    table.add_column("File:line", no_wrap=True)
+    table.add_column("Value", no_wrap=True, max_width=28)
     table.add_column("Ent.", justify="right", no_wrap=True)
 
     for f in findings:
