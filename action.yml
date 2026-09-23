@@ -1,5 +1,4 @@
-name: "Keyhound"
-description: "Find exposed credentials in your code, with rules for Brazilian payment gateways and services"
+name: "Keyhound Secret Scanner"
 author: "Felipe Convento"
 
 branding:
