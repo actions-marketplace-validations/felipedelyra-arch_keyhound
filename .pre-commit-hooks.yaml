@@ -1,0 +1,7 @@
+- id: keyhound
+  name: Keyhound — detecta credenciais expostas
+  description: Bloqueia o commit quando encontra credencial no código
+  entry: keyhound scan
+  language: python
+  pass_filenames: false
+  args: ["--fail-on", "medium"]

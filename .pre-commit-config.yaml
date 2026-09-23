@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: keyhound
+        name: Keyhound — detecta credenciais expostas
+        entry: keyhound scan
+        language: system
+        pass_filenames: false
+        args: ["--fail-on", "critical"]
