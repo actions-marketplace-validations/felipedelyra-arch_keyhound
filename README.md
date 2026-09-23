@@ -1,5 +1,10 @@
 # Keyhound
 
+[![CI](https://github.com/felipedelyra-arch/keyhound/actions/workflows/ci.yml/badge.svg)](https://github.com/felipedelyra-arch/keyhound/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/keyhound)](https://pypi.org/project/keyhound/)
+[![Python](https://img.shields.io/pypi/pyversions/keyhound)](https://pypi.org/project/keyhound/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+
 Detector de credenciais expostas em código, com cobertura para serviços
 brasileiros que ferramentas como gitleaks e trufflehog não reconhecem:
 Mercado Pago, Asaas, Pagar.me, Cielo, PagSeguro, chave Pix, certificado
@@ -40,15 +45,6 @@ keyhound history . -f json
 
 O valor do segredo é sempre mascarado na saída — na tela, no JSON e em
 qualquer log.
-
-### Na integração contínua
-
-```bash
-keyhound scan . --fail-on critical
-```
-
-Código de saída `1` quando encontra algo no nível informado, `0` quando
-está limpo.
 
 ## O que detecta
 
