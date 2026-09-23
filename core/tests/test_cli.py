@@ -3,7 +3,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from fresta.cli import app
+from keyhound.cli import app
 
 runner = CliRunner()
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -69,7 +69,7 @@ def test_invalid_path_returns_two():
 def test_version():
     result = runner.invoke(app, ["version"])
     assert result.exit_code == 0
-    assert "fresta" in result.stdout
+    assert "keyhound" in result.stdout
 
 
 def test_history_on_plain_directory(tmp_path):

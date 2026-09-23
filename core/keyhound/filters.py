@@ -1,7 +1,7 @@
 """Anti-ruído: decide o que NÃO é segredo de verdade.
 
 Três camadas, da mais barata para a mais cara:
-  1. caminho ignorado pelo .frestaignore
+  1. caminho ignorado pelo .keyhoundignore
   2. valor é placeholder óbvio (CHANGEME, xxxx, <your-key>)
   3. valor está na allowlist de exemplos públicos conhecidos
 """
@@ -12,7 +12,7 @@ import fnmatch
 import re
 from pathlib import Path
 
-IGNORE_FILE = ".frestaignore"
+IGNORE_FILE = ".keyhoundignore"
 
 KNOWN_EXAMPLES: frozenset[str] = frozenset({
     "AKIAIOSFODNN7EXAMPLE",
@@ -37,7 +37,7 @@ PLACEHOLDER_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
 
 
 def load_ignore_patterns(root: Path) -> list[str]:
-    """Lê o .frestaignore. Linha vazia e comentário são descartados."""
+    """Lê o .keyhoundignore. Linha vazia e comentário são descartados."""
     ignore_file = root / IGNORE_FILE
     if not ignore_file.is_file():
         return []
@@ -52,7 +52,7 @@ def load_ignore_patterns(root: Path) -> list[str]:
 
 
 def is_ignored_path(path: Path, root: Path, patterns: list[str]) -> bool:
-    """Casa o caminho relativo contra os globs do .frestaignore."""
+    """Casa o caminho relativo contra os globs do .keyhoundignore."""
     if not patterns:
         return False
 

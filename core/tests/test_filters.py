@@ -1,4 +1,4 @@
-from fresta.filters import (
+from keyhound.filters import (
     is_ignored_path,
     is_known_example,
     is_noise,
@@ -26,7 +26,7 @@ def test_known_example_is_filtered():
 
 
 def test_load_ignore_skips_comments(tmp_path):
-    (tmp_path / ".frestaignore").write_text("# comment\n\ndocs/\n*.lock\n")
+    (tmp_path / ".keyhoundignore").write_text("# comment\n\ndocs/\n*.lock\n")
     assert load_ignore_patterns(tmp_path) == ["docs/", "*.lock"]
 
 

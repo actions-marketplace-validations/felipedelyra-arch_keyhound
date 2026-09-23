@@ -1,8 +1,8 @@
 import pytest
 
-from fresta.entropy import shannon_entropy
-from fresta.models import Severity
-from fresta.rules import RULES, rules_by_severity
+from keyhound.entropy import shannon_entropy
+from keyhound.models import Severity
+from keyhound.rules import RULES, rules_by_severity
 
 BY_ID = {r.id: r for r in RULES}
 

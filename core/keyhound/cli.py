@@ -6,21 +6,21 @@ from typing import Annotated
 import typer
 from rich.console import Console
 
-from fresta import __version__
-from fresta.history import scan_history
-from fresta.models import Severity
-from fresta.report import (
+from keyhound import __version__
+from keyhound.history import scan_history
+from keyhound.models import Severity
+from keyhound.report import (
     history_to_json,
     print_history_table,
     print_summary,
     print_table,
     to_json,
 )
-from fresta.rules import rules_by_severity
-from fresta.scanner import scan_directory
+from keyhound.rules import rules_by_severity
+from keyhound.scanner import scan_directory
 
 app = typer.Typer(
-    help="Fresta — find exposed credentials in your code.",
+    help="Keyhound — find exposed credentials in your code.",
     no_args_is_help=True,
     add_completion=False,
 )
@@ -106,7 +106,7 @@ def history(
 @app.command()
 def version() -> None:
     """Show the version."""
-    console.print(f"fresta {__version__}")
+    console.print(f"keyhound {__version__}")
 
 
 if __name__ == "__main__":

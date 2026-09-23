@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from fresta.history import is_git_repository, scan_history
+from keyhound.history import is_git_repository, scan_history
 
 
 def _git(repo: Path, *args: str) -> None:

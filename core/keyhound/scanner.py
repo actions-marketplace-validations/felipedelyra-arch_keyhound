@@ -5,10 +5,10 @@ from __future__ import annotations
 from collections.abc import Iterable, Iterator
 from pathlib import Path
 
-from fresta.entropy import shannon_entropy
-from fresta.filters import is_ignored_path, is_noise, load_ignore_patterns
-from fresta.models import Finding, Rule
-from fresta.rules import RULES
+from keyhound.entropy import shannon_entropy
+from keyhound.filters import is_ignored_path, is_noise, load_ignore_patterns
+from keyhound.models import Finding, Rule
+from keyhound.rules import RULES
 
 IGNORED_DIRS: frozenset[str] = frozenset({
     ".git", ".hg", ".svn", "node_modules", ".venv", "venv", "env",

@@ -6,9 +6,9 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-from fresta.models import Finding, Rule
-from fresta.rules import RULES
-from fresta.scanner import _scan_line
+from keyhound.models import Finding, Rule
+from keyhound.rules import RULES
+from keyhound.scanner import _scan_line
 
 COMMIT_SEPARATOR = "@@FRESTA-COMMIT@@"
 MAX_LINE_LENGTH = 4096

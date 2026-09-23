@@ -1,6 +1,6 @@
 """Catálogo de regras. Só dados, nenhuma lógica."""
 
-from fresta.models import Rule, Severity
+from keyhound.models import Rule, Severity
 
 RULES: list[Rule] = [
     # ---------- Global services ----------

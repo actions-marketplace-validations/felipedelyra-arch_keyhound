@@ -3,19 +3,19 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "fresta"
+name = "keyhound"
 version = "0.2.0"
-description = "Detector de credenciais expostas em código, com regras para serviços brasileiros"
+description = "Find exposed credentials in your code, with rules for Brazilian payment gateways and services"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
+license = { text = "Apache-2.0" }
 authors = [{ name = "Felipe Convento" }]
 keywords = ["security", "secrets", "sast", "credentials", "brasil", "pix", "supabase"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Security",
@@ -31,19 +31,19 @@ dependencies = [
 dev = ["pytest>=8.0"]
 
 [project.urls]
-Homepage = "https://github.com/SEU-USUARIO/fresta"
-Repository = "https://github.com/SEU-USUARIO/fresta"
-Issues = "https://github.com/SEU-USUARIO/fresta/issues"
+Homepage = "https://github.com/felipedelyra-arch/keyhound"
+Repository = "https://github.com/felipedelyra-arch/keyhound"
+Issues = "https://github.com/felipedelyra-arch/keyhound/issues"
 
 [project.scripts]
-fresta = "fresta.cli:app"
+keyhound = "keyhound.cli:app"
 
 [tool.setuptools]
 package-dir = { "" = "core" }
 
 [tool.setuptools.packages.find]
 where = ["core"]
-include = ["fresta*"]
+include = ["keyhound*"]
 
 [tool.pytest.ini_options]
 testpaths = ["core/tests"]

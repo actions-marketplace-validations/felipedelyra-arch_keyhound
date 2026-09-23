@@ -1,6 +1,6 @@
 import pytest
 
-from fresta.entropy import is_high_entropy, shannon_entropy
+from keyhound.entropy import is_high_entropy, shannon_entropy
 
 
 def test_empty_string():

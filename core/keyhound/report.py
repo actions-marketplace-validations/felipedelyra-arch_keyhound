@@ -6,7 +6,7 @@ from pathlib import Path
 from rich.console import Console
 from rich.table import Table
 
-from fresta.models import Finding, Severity
+from keyhound.models import Finding, Severity
 
 COLORS: dict[Severity, str] = {
     Severity.CRITICAL: "bold white on red",

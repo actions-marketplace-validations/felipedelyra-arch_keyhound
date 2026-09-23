@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fresta.scanner import is_binary, iter_files, scan_directory
+from keyhound.scanner import is_binary, iter_files, scan_directory
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
