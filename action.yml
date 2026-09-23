@@ -1,4 +1,5 @@
 name: "Keyhound Secret Scanner"
+description: "Detect exposed credentials, including Brazilian payment gateway keys"
 author: "Felipe Convento"
 
 branding:
