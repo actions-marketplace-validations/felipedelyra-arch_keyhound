@@ -2,6 +2,8 @@
 
 **Segredo não é arrombado, ele escorre por uma fresta.**
 
+![Fresta em funcionamento](demo.png)
+
 Detector de credenciais expostas em código, com cobertura para serviços
 brasileiros que ferramentas como gitleaks e trufflehog não reconhecem:
 Mercado Pago, Asaas, Pagar.me, Cielo, PagSeguro, chave Pix, certificado
