@@ -1,6 +1,6 @@
 # Fresta
 
-**Segredo não é arrombado — ele escorre por uma fresta.**
+**Segredo não é arrombado, ele escorre por uma fresta.**
 
 Detector de credenciais expostas em código, com cobertura para serviços
 brasileiros que ferramentas como gitleaks e trufflehog não reconhecem:
