@@ -64,6 +64,29 @@ políticas de Row Level Security do Supabase. Vazada no frontend, expõe o
 banco inteiro. É visualmente idêntica à chave `anon`, que é pública e
 inofensiva — o Keyhound distingue as duas.
 
+## Pre-commit hook
+
+Bloqueia o commit automaticamente quando encontra credencial. No
+`.pre-commit-config.yaml` do seu projeto:
+
+```yaml
+repos:
+  - repo: https://github.com/felipedelyra-arch/keyhound
+    rev: v0.2.0
+    hooks:
+      - id: keyhound
+```
+
+Depois:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+A partir daí, todo `git commit` passa pelo Keyhound. Se encontrar algo de
+severidade média ou acima, o commit é recusado.
+
 ## Reduzindo ruído
 
 Ferramenta que grita demais é desinstalada. O Keyhound filtra em três
