@@ -87,6 +87,39 @@ pre-commit install
 A partir daí, todo `git commit` passa pelo Keyhound. Se encontrar algo de
 severidade média ou acima, o commit é recusado.
 
+## GitHub Action
+
+No `.github/workflows/security.yml` do seu projeto:
+
+```yaml
+name: Secret scan
+
+on: [push, pull_request]
+
+jobs:
+  keyhound:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: felipedelyra-arch/keyhound@v0.2.0
+        with:
+          fail-on: critical
+```
+
+Para varrer também o histórico completo:
+
+```yaml
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: felipedelyra-arch/keyhound@v0.2.0
+        with:
+          scan-history: "true"
+```
+
+O `fetch-depth: 0` é necessário porque, por padrão, o checkout traz
+apenas o último commit.
+
 ## Reduzindo ruído
 
 Ferramenta que grita demais é desinstalada. O Keyhound filtra em três
