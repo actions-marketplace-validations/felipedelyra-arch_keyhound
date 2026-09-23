@@ -1,0 +1,52 @@
+name: "Keyhound"
+description: "Find exposed credentials in your code, with rules for Brazilian payment gateways and services"
+author: "Felipe Convento"
+
+branding:
+  icon: "key"
+  color: "red"
+
+inputs:
+  path:
+    description: "Directory to scan"
+    required: false
+    default: "."
+  min-severity:
+    description: "Lowest severity to report (critical, high, medium, low)"
+    required: false
+    default: "low"
+  fail-on:
+    description: "Exit with failure at this severity or above"
+    required: false
+    default: "medium"
+  scan-history:
+    description: "Also scan the full git history"
+    required: false
+    default: "false"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install Keyhound
+      shell: bash
+      run: pip install keyhound
+
+    - name: Scan working tree
+      shell: bash
+      run: |
+        keyhound scan "${{ inputs.path }}" \
+          --min-severity "${{ inputs.min-severity }}" \
+          --fail-on "${{ inputs.fail-on }}"
+
+    - name: Scan git history
+      if: inputs.scan-history == 'true'
+      shell: bash
+      run: |
+        keyhound history "${{ inputs.path }}" \
+          --min-severity "${{ inputs.min-severity }}" \
+          --fail-on "${{ inputs.fail-on }}"
