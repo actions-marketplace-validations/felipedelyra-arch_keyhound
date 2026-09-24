@@ -46,6 +46,23 @@ keyhound history . -f json
 O valor do segredo é sempre mascarado na saída — na tela, no JSON e em
 qualquer log.
 
+### Validação ativa
+
+```bash
+keyhound scan . --validate
+```
+
+Consulta o próprio serviço para saber se a credencial encontrada ainda
+funciona. Separa o que é histórico do que é incidente: uma chave
+**ativa** precisa ser revogada agora.
+
+Suportado hoje: GitHub, Slack, Stripe e Mercado Pago. As chamadas são de
+leitura, feitas por HTTPS direto no endpoint oficial de cada serviço, e
+só acontecem com a flag explícita.
+
+**Use apenas em credenciais suas ou que você tenha autorização para
+testar.**
+
 ## O que detecta
 
 **Globais** — AWS, GitHub, Slack, chave privada PEM, JWT, string de
