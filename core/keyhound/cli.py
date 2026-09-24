@@ -19,6 +19,7 @@ from keyhound.report import (
 from keyhound.rules import rules_by_severity
 from keyhound.sarif import to_sarif
 from keyhound.scanner import scan_directory
+from keyhound.validate import validate_all
 
 app = typer.Typer(
     help="Keyhound — find exposed credentials in your code.",
@@ -45,6 +46,13 @@ def scan(
         Severity | None,
         typer.Option("--fail-on", help="Exit with code 1 at this severity or above."),
     ] = None,
+    validate_keys: Annotated[
+        bool,
+        typer.Option(
+            "--validate",
+            help="Check whether found credentials are still active (makes network calls).",
+        ),
+    ] = False,
 ) -> None:
     """Scan a directory for hardcoded secrets."""
     root = path.resolve()
@@ -54,13 +62,21 @@ def scan(
 
     findings = scan_directory(root, rules_by_severity(min_severity))
 
+    statuses = None
+    if validate_keys and findings:
+        err_console.print(
+            "[yellow]Validating credentials against the official service APIs. "
+            "Only use this on credentials you own or are authorized to test.[/]"
+        )
+        statuses = validate_all(findings)
+
     if output_format == "json":
-        console.print_json(to_json(findings, root))
+        console.print_json(to_json(findings, root, statuses))
     elif output_format == "sarif":
         print(to_sarif(findings, root))
     else:
-        print_table(findings, root, console)
-        print_summary(findings, console)
+        print_table(findings, root, console, statuses)
+        print_summary(findings, console, statuses)
 
     if fail_on is not None and any(f.severity.weight >= fail_on.weight for f in findings):
         raise typer.Exit(code=1)
