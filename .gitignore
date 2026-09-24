@@ -6,3 +6,4 @@ __pycache__/
 exemplo/
 dist/
 build/
+keyhound-report*.html
