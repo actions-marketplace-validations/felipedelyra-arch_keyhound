@@ -17,6 +17,7 @@ from keyhound.report import (
     to_json,
 )
 from keyhound.rules import rules_by_severity
+from keyhound.sarif import to_sarif
 from keyhound.scanner import scan_directory
 
 app = typer.Typer(
@@ -38,7 +39,7 @@ def scan(
         typer.Option("--min-severity", "-m", help="Lowest severity to report."),
     ] = Severity.LOW,
     output_format: Annotated[
-        str, typer.Option("--format", "-f", help="table or json.")
+        str, typer.Option("--format", "-f", help="table, json or sarif.")
     ] = "table",
     fail_on: Annotated[
         Severity | None,
@@ -55,6 +56,8 @@ def scan(
 
     if output_format == "json":
         console.print_json(to_json(findings, root))
+    elif output_format == "sarif":
+        print(to_sarif(findings, root))
     else:
         print_table(findings, root, console)
         print_summary(findings, console)
