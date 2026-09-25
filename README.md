@@ -36,6 +36,7 @@ Requer Python 3.11 ou superior.
 keyhound scan .                        # varre o diretório atual
 keyhound scan ./src -m high            # só severidade alta ou acima
 keyhound scan . -f json                # saída para pipeline
+keyhound scan . -f sarif               # saída para o GitHub code scanning
 keyhound scan . --fail-on critical     # sai com código 1 se achar crítico
 
 keyhound history .                     # varre todo o histórico do git
@@ -43,8 +44,40 @@ keyhound history . -n 100              # só os 100 commits mais recentes
 keyhound history . -f json
 ```
 
-O valor do segredo é sempre mascarado na saída — na tela, no JSON e em
-qualquer log.
+O valor do segredo é sempre mascarado na saída — na tela, no JSON, no
+SARIF e no relatório.
+
+### Validação ativa
+
+```bash
+keyhound scan . --validate
+```
+
+Consulta o próprio serviço para saber se a credencial encontrada ainda
+funciona. Separa o que é histórico do que é incidente: uma chave
+**ativa** precisa ser revogada agora.
+
+Suportado hoje: GitHub, Slack, Stripe e Mercado Pago. As chamadas são de
+leitura, feitas por HTTPS direto no endpoint oficial de cada serviço, e
+só acontecem com a flag explícita.
+
+**Use apenas em credenciais suas ou que você tenha autorização para
+testar.**
+
+### Relatório para não técnicos
+
+```bash
+keyhound report . -o relatorio.html --client "Nome da Empresa"
+keyhound report . -o relatorio.html --validate
+```
+
+Gera um arquivo HTML para o dono da empresa, o jurídico ou a auditoria:
+resumo em linguagem simples, tabela de achados, o que fazer em cada caso
+e a leitura pela LGPD (Art. 46 e Art. 48). Abre em qualquer navegador e
+pode ser impresso ou salvo em PDF.
+
+O relatório é técnico e não constitui parecer jurídico. Trate-o como
+confidencial: ele aponta onde estão as falhas.
 
 ## O que detecta
 
@@ -68,7 +101,7 @@ Bloqueia o commit automaticamente quando encontra credencial. No
 ```yaml
 repos:
   - repo: https://github.com/felipedelyra-arch/keyhound
-    rev: v0.2.0
+    rev: v0.3.0
     hooks:
       - id: keyhound
 ```
@@ -97,7 +130,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: felipedelyra-arch/keyhound@v0.2.0
+      - uses: felipedelyra-arch/keyhound@v0.3.0
         with:
           fail-on: critical
 ```
@@ -108,13 +141,40 @@ Para varrer também o histórico completo:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: felipedelyra-arch/keyhound@v0.2.0
+      - uses: felipedelyra-arch/keyhound@v0.3.0
         with:
           scan-history: "true"
 ```
 
 O `fetch-depth: 0` é necessário porque, por padrão, o checkout traz
 apenas o último commit.
+
+### Achados na aba Security
+
+Com a saída SARIF, os achados aparecem na aba **Security → Code scanning**
+do repositório, anotados na linha do código:
+
+```yaml
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  keyhound:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install keyhound
+      - run: keyhound scan . --format sarif > keyhound.sarif
+        continue-on-error: true
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: keyhound.sarif
+          category: keyhound
+```
 
 ## Reduzindo ruído
 

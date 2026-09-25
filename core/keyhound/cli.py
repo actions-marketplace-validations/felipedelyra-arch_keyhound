@@ -8,6 +8,7 @@ from rich.console import Console
 
 from keyhound import __version__
 from keyhound.history import scan_history
+from keyhound.lgpd import to_html
 from keyhound.models import Severity
 from keyhound.report import (
     history_to_json,
@@ -17,7 +18,9 @@ from keyhound.report import (
     to_json,
 )
 from keyhound.rules import rules_by_severity
+from keyhound.sarif import to_sarif
 from keyhound.scanner import scan_directory
+from keyhound.validate import validate_all
 
 app = typer.Typer(
     help="Keyhound — find exposed credentials in your code.",
@@ -26,6 +29,11 @@ app = typer.Typer(
 )
 console = Console()
 err_console = Console(stderr=True)
+
+VALIDATION_WARNING = (
+    "[yellow]Validating credentials against the official service APIs. "
+    "Only use this on credentials you own or are authorized to test.[/]"
+)
 
 
 @app.command()
@@ -38,12 +46,19 @@ def scan(
         typer.Option("--min-severity", "-m", help="Lowest severity to report."),
     ] = Severity.LOW,
     output_format: Annotated[
-        str, typer.Option("--format", "-f", help="table or json.")
+        str, typer.Option("--format", "-f", help="table, json or sarif.")
     ] = "table",
     fail_on: Annotated[
         Severity | None,
         typer.Option("--fail-on", help="Exit with code 1 at this severity or above."),
     ] = None,
+    validate_keys: Annotated[
+        bool,
+        typer.Option(
+            "--validate",
+            help="Check whether found credentials are still active (makes network calls).",
+        ),
+    ] = False,
 ) -> None:
     """Scan a directory for hardcoded secrets."""
     root = path.resolve()
@@ -53,14 +68,58 @@ def scan(
 
     findings = scan_directory(root, rules_by_severity(min_severity))
 
+    statuses = None
+    if validate_keys and findings:
+        err_console.print(VALIDATION_WARNING)
+        statuses = validate_all(findings)
+
     if output_format == "json":
-        console.print_json(to_json(findings, root))
+        console.print_json(to_json(findings, root, statuses))
+    elif output_format == "sarif":
+        print(to_sarif(findings, root))
     else:
-        print_table(findings, root, console)
-        print_summary(findings, console)
+        print_table(findings, root, console, statuses)
+        print_summary(findings, console, statuses)
 
     if fail_on is not None and any(f.severity.weight >= fail_on.weight for f in findings):
         raise typer.Exit(code=1)
+
+
+@app.command()
+def report(
+    path: Annotated[
+        Path, typer.Argument(help="Directory to scan.")
+    ] = Path("."),
+    output: Annotated[
+        Path, typer.Option("--output", "-o", help="HTML file to write.")
+    ] = Path("keyhound-report.html"),
+    client: Annotated[
+        str | None, typer.Option("--client", help="Name shown at the top of the report.")
+    ] = None,
+    validate_keys: Annotated[
+        bool,
+        typer.Option(
+            "--validate",
+            help="Check whether found credentials are still active (makes network calls).",
+        ),
+    ] = False,
+) -> None:
+    """Generate an HTML report for non-technical readers, with LGPD guidance."""
+    root = path.resolve()
+    if not root.is_dir():
+        err_console.print(f"[bold red]Not a directory:[/] {root}")
+        raise typer.Exit(code=2)
+
+    findings = scan_directory(root)
+
+    statuses = None
+    if validate_keys and findings:
+        err_console.print(VALIDATION_WARNING)
+        statuses = validate_all(findings)
+
+    output.write_text(to_html(findings, root, statuses, client), encoding="utf-8")
+    console.print(f"[bold green]Report written:[/] {output.resolve()}")
+    console.print(f"{len(findings)} finding(s).")
 
 
 @app.command()
